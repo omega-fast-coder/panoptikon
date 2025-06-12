@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
-import { ShoppingCart, Plus, Minus, Trash2, X } from "lucide-react";
+import { ShoppingCart, Plus, Minus, Trash2, X, CreditCard } from "lucide-react";
 import { useCart } from "@/providers/cart-provider";
 import {
   Sheet,
@@ -17,6 +18,7 @@ import { ScrollArea } from "./ui/scroll-area";
 
 export default function FloatingCart() {
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
   const {
     items,
     totalItems,
@@ -31,7 +33,7 @@ export default function FloatingCart() {
       <SheetTrigger asChild>
         <Button
           size="lg"
-          className="fixed bottom-6 right-6 h-16 w-16 rounded-full shadow-2xl hover:shadow-xl transition-all duration-300 z-50 group"
+          className="fixed bottom-6 right-6 h-16 w-16 rounded-full shadow-2xl hover:shadow-xl transition-all duration-300 z-50 group cursor-pointer"
         >
           <div className="relative">
             <ShoppingCart className="h-6 w-6" />
@@ -166,7 +168,15 @@ export default function FloatingCart() {
               </div>
 
               <div className="space-y-2">
-                <Button size="lg" className="w-full">
+                <Button
+                  size="lg"
+                  className="w-full gap-2"
+                  onClick={() => {
+                    setIsOpen(false);
+                    router.push("/checkout");
+                  }}
+                >
+                  <CreditCard className="h-4 w-4" />
                   Gå til checkout
                 </Button>
                 <Button

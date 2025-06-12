@@ -1,14 +1,13 @@
 "use client";
 
-"use client";
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { SerializedProduct } from "@/lib/types";
-import { ShoppingCart, ImageIcon, Check } from "lucide-react";
+import { ShoppingCart, ImageIcon, Check, Eye } from "lucide-react";
 import { useCart } from "@/providers/cart-provider";
 import Image from "next/image";
 import { useState } from "react";
+import ProductDetailsModal from "./product-details-modal";
 
 interface ProductCardProps {
   product: SerializedProduct;
@@ -18,6 +17,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   const { name, description, price, stockUnits, imageUrl } = product;
   const { addItem, items } = useCart();
   const [isAdding, setIsAdding] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Check if we have a valid image URL
   const hasValidImage = imageUrl && imageUrl.trim() !== "";
@@ -35,14 +35,15 @@ export default function ProductCard({ product }: ProductCardProps) {
   };
 
   return (
-    <Card className="w-full max-w-sm overflow-hidden group hover:shadow-lg transition-shadow duration-300 p-0">
-      <div className="relative">
+    <Card className="w-full h-full overflow-hidden group hover:shadow-lg transition-shadow duration-300 p-0 flex flex-col">
+      {/* Image Section - Fixed Height */}
+      <div className="relative flex-shrink-0">
         {hasValidImage ? (
           <Image
             src={imageUrl}
             alt={name}
-            width={150}
-            height={150}
+            width={300}
+            height={200}
             className="w-full h-48 object-cover"
           />
         ) : (
@@ -56,27 +57,33 @@ export default function ProductCard({ product }: ProductCardProps) {
         )}
       </div>
 
-      <CardContent className="p-4">
-        <div className="space-y-2">
-          <h3 className="font-semibold text-lg leading-tight">{name}</h3>
+      {/* Content Section - Flexible Height */}
+      <CardContent className="p-4 flex-1 flex flex-col">
+        <div className="space-y-2 flex-1">
+          <h3 className="font-semibold text-lg leading-tight line-clamp-2 min-h-[3.5rem]">
+            {name}
+          </h3>
 
-          <p className="text-sm text-muted-foreground line-clamp-2">
+          <p className="text-sm text-muted-foreground line-clamp-3 flex-1">
             {description}
           </p>
 
-          <p className="text-sm text-muted-foreground">
-            {stockUnits} stk. på lager
-          </p>
+          <div className="mt-auto pt-2 space-y-2">
+            <p className="text-sm text-muted-foreground">
+              {stockUnits} stk. på lager
+            </p>
 
-          <div className="flex items-center gap-2">
-            <span className="text-2xl font-bold text-primary">
-              {price.toFixed(2)},- kr.
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="text-2xl font-bold text-primary">
+                {price.toFixed(2)},- kr.
+              </span>
+            </div>
           </div>
         </div>
       </CardContent>
 
-      <CardFooter className="p-4 pt-0 flex flex-col gap-2">
+      {/* Footer Section - Fixed at Bottom */}
+      <CardFooter className="p-4 pt-0 flex flex-col gap-2 mt-auto">
         <Button
           size="lg"
           className="w-full"
@@ -99,10 +106,22 @@ export default function ProductCard({ product }: ProductCardProps) {
             </>
           )}
         </Button>
-        <Button size="lg" variant="outline" className="w-full">
+        <Button
+          size="lg"
+          variant="outline"
+          className="w-full"
+          onClick={() => setIsModalOpen(true)}
+        >
+          <Eye className="mr-2 h-4 w-4" />
           Se detaljer
         </Button>
       </CardFooter>
+
+      <ProductDetailsModal
+        product={product}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </Card>
   );
 }
