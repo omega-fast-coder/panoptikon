@@ -14,6 +14,16 @@ datasource db {
   url      = "file:./panoptikon.db"
 }
 
+
+model ProductsCategories {
+  id Int @id @default(autoincrement())
+  name String
+  description String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  products Products[]
+}
+
 model Products {
   id Int @id @default(autoincrement())
   name String
@@ -23,4 +33,7 @@ model Products {
   imageUrl String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  categoryId Int
+  category ProductsCategories @relation(fields: [categoryId], references: [id])
 }
+
