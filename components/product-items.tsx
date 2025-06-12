@@ -4,7 +4,7 @@ import { getProducts } from "@/lib/actions/products";
 import { SerializedProduct } from "@/lib/types";
 import { useEffect, useState } from "react";
 
-export const ProductItem = () => {
+export const ProductItems = () => {
   const [products, setProducts] = useState<SerializedProduct[]>([]);
 
   useEffect(() => {
@@ -29,4 +29,4 @@ export const ProductItem = () => {
   );
 };
 
-export default ProductItem;
+export default ProductItems;

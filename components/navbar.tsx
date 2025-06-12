@@ -10,31 +10,26 @@ import {
 } from "./ui/navigation-menu";
 import Link from "next/link";
 import ListItem from "./list-item";
+import { getCategories } from "@/lib/actions/categories";
+import { ProductsCategories } from "@/lib/generated/prisma";
+import EmptyState from "./empty-state";
+import { CircleHelpIcon } from "lucide-react";
 
-const categories: { title: string; href: string; description: string }[] = [
-  {
-    title: "Alert Dialog",
-    href: "/docs/primitives/alert-dialog",
-    description:
-      "A modal dialog that interrupts the user with important content and expects a response.",
-  },
-  {
-    title: "Hover Card",
-    href: "/docs/primitives/hover-card",
-    description:
-      "For sighted users to preview content available behind a link.",
-  },
-  {
-    title: "Progress",
-    href: "/docs/primitives/progress",
-    description:
-      "Displays an indicator showing the completion progress of a task, typically displayed as a progress bar.",
-  },
-];
+const Navbar = async () => {
+  const categories = await getCategories();
 
-const Navbar = () => {
+  if (!categories) {
+    return (
+      <EmptyState
+        title="Ingen kategorier fundet"
+        description="Vi har ingen kategorier tilgængelige i øjeblikket."
+        icon={CircleHelpIcon}
+      />
+    );
+  }
+
   return (
-    <div className="w-full flex items-center justify-center mt-5">
+    <div className="w-full flex items-center justify-center pt-5 sticky top-0 z-50 bg-background">
       <div className="bg-background w-2xl h-16 rounded-full border border-border">
         <div className="h-full flex px-5 items-center justify-between">
           {/* Logo section */}
@@ -52,13 +47,13 @@ const Navbar = () => {
                 <NavigationMenuTrigger>Kategorier</NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="grid w-[400px] gap-2 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-                    {categories.map((component) => (
+                    {categories.map((category: ProductsCategories) => (
                       <ListItem
-                        key={component.title}
-                        title={component.title}
-                        href={component.href}
+                        key={category.id}
+                        title={category.name}
+                        href={`/category/${category.id}`}
                       >
-                        {component.description}
+                        {category.description}
                       </ListItem>
                     ))}
                   </ul>
