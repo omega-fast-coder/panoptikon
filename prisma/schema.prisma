@@ -10,6 +10,17 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./panoptikon.db"
+}
+
+model Products {
+  id Int @id @default(autoincrement())
+  name String
+  description String
+  price Decimal
+  stockUnits Int
+  imageUrl String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
