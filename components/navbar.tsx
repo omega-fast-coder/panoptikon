@@ -14,6 +14,7 @@ import { getCategories } from "@/lib/actions/categories";
 import { ProductsCategories } from "@/lib/generated/prisma";
 import EmptyState from "./empty-state";
 import { CircleHelpIcon } from "lucide-react";
+import { ModeToggle } from "./theme-switcher";
 
 const Navbar = async () => {
   const categories = await getCategories();
@@ -74,6 +75,9 @@ const Navbar = async () => {
                 >
                   <Link href="/contact">Kontakt</Link>
                 </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <ModeToggle />
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
